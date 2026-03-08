@@ -4,10 +4,8 @@ const PYTHON_API = process.env.PYTHON_API_URL || process.env.NEXT_PUBLIC_PYTHON_
 
 export async function GET() {
   const python = await checkPython();
-  // Production: FFmpeg sadece Python API'de. Python OK ise FFmpeg de OK say.
-  const ffmpeg = (process.env.PYTHON_API_URL || process.env.NEXT_PUBLIC_PYTHON_API_URL || python.status === "ok")
-    ? { status: "ok" as const }
-    : await checkFfmpeg();
+  // FFmpeg sadece Python API'de. Frontend'de kontrol etme - Python OK ise yeterli.
+  const ffmpeg = { status: "ok" as const };
   return NextResponse.json({
     python,
     ffmpeg,
