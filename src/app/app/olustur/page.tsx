@@ -294,7 +294,7 @@ export default function OlusturPage() {
         <div className="bg-red-500/15 border-b border-red-500/40 px-6 py-3 text-center text-sm text-red-200/95 flex flex-wrap items-center justify-center gap-2">
           <strong>Video motoru hazır değil.</strong>
           {health.python.status === "error" && (
-            <span>Python API kapalı. Terminalde <code className="bg-black/30 px-1 rounded">npm run dev:all</code> veya <code className="bg-black/30 px-1 rounded">npm run api:python</code> çalıştır.</span>
+            <span>Python API kapalı. Yerel geliştirme: <code className="bg-black/30 px-1 rounded">npm run dev:all</code>. Railway: <code className="bg-black/30 px-1 rounded">PYTHON_API_URL</code> değişkenini ekle.</span>
           )}
           {health.python.status === "ok" && health.ffmpeg.status === "error" && (
             <span>FFmpeg bulunamadı. <a href="https://ffmpeg.org/download.html" target="_blank" rel="noopener noreferrer" className="underline">FFmpeg indir</a> ve PATH&apos;e ekle.</span>

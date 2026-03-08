@@ -1,10 +1,13 @@
 import { NextResponse } from "next/server";
 
-const PYTHON_API = process.env.PYTHON_API_URL || "http://localhost:8000";
+const PYTHON_API = process.env.PYTHON_API_URL || process.env.NEXT_PUBLIC_PYTHON_API_URL || "http://localhost:8000";
 
 export async function GET() {
   const python = await checkPython();
-  const ffmpeg = await checkFfmpeg();
+  // Production: FFmpeg sadece Python API'de. Python OK ise FFmpeg de OK say.
+  const ffmpeg = (process.env.PYTHON_API_URL || process.env.NEXT_PUBLIC_PYTHON_API_URL || python.status === "ok")
+    ? { status: "ok" as const }
+    : await checkFfmpeg();
   return NextResponse.json({
     python,
     ffmpeg,
