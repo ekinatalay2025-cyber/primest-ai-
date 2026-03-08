@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import OpenAI from "openai";
 
-const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
+export const dynamic = "force-dynamic";
 
 const GREETING_PROMPT = `Sen samimi bir video oluşturma asistanısın. Kullanıcının adı verildi. Ona doğal, sıcak bir karşılama mesajı yaz. İsmini kullan. Kısa tut (1-2 cümle). Ne tür video istediğini sor ama "biraz daha anlat" gibi genel ifadeler kullanma. Doğal, samimi ol. Sadece mesaj metnini döndür, JSON yok.`;
 
@@ -31,6 +31,7 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "OpenAI API gerekli" }, { status: 503 });
     }
 
+    const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
     // İlk karşılama mesajı: kullanıcı adıyla kişiselleştirilmiş
     if (!messages?.length && user_name) {
       const greeting = await openai.chat.completions.create({

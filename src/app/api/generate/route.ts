@@ -1,8 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
 
+export const dynamic = "force-dynamic";
 const PYTHON_API = process.env.PYTHON_API_URL || "http://localhost:8000";
 
-// Video üretimi uzun sürer - timeout uzat (Vercel Pro: 300s)
+// Video üretimi uzun sürer - timeout uzat
 export const maxDuration = 300;
 
 export async function POST(req: NextRequest) {
