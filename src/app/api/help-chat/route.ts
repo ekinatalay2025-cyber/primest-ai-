@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import OpenAI from "openai";
 
-const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
+export const dynamic = "force-dynamic";
 
 const SYSTEM_PROMPT = `Sen PRIMEST AI uygulamasının yardım asistanısın. SADECE uygulama hakkında bilgi ver.
 
@@ -27,6 +27,7 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "messages gerekli" }, { status: 400 });
     }
 
+    const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
     const completion = await openai.chat.completions.create({
       model: "gpt-4o-mini",
       messages: [
