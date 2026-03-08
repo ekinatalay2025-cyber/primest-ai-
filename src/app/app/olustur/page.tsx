@@ -183,7 +183,7 @@ export default function OlusturPage() {
         }),
       });
       const raw = await res.text();
-      let data: { error?: string; detail?: string; narration?: string; sources?: unknown[]; video_error?: string; audio_url?: string; video_url?: string; shorts_url?: string; video_id?: string };
+      let data: { error?: string; detail?: string; narration?: string; sources?: { title: string; url: string }[]; video_error?: string; audio_url?: string; video_url?: string; shorts_url?: string; video_id?: string };
       try {
         data = raw?.trim() ? JSON.parse(raw) : {};
       } catch {
@@ -191,7 +191,7 @@ export default function OlusturPage() {
       }
       if (!res.ok) throw new Error(data.detail || data.error || "Metin oluşturulamadı");
       setNarration(data.narration ?? "");
-      setSources(data.sources || []);
+      setSources(data.sources ?? []);
 
       if (data.video_error) setError((prev) => (prev ? `${prev} | ` : "") + `Görüntü oluşmadı: ${data.video_error}`);
 
