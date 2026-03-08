@@ -183,7 +183,7 @@ export default function OlusturPage() {
         }),
       });
       const raw = await res.text();
-      let data: { error?: string; detail?: string; narration?: string; sources?: { title: string; url: string }[]; video_error?: string; audio_url?: string; video_url?: string; shorts_url?: string; video_id?: string };
+      let data: { error?: string; detail?: string; narration?: string; sources?: { title: string; url: string }[]; video_error?: string; audio_url?: string; video_url?: string; shorts_url?: string; video_id?: string; digital_fingerprint?: string };
       try {
         data = raw?.trim() ? JSON.parse(raw) : {};
       } catch {
