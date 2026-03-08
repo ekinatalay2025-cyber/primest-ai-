@@ -37,9 +37,18 @@ app = FastAPI(
     version="1.0.0",
 )
 
+# CORS: FRONTEND_URLS=url1,url2 + railway.app regex
+_origins = ["http://localhost:3000", "https://natural-quietude-production-9e7a.up.railway.app"]
+_extra = os.getenv("FRONTEND_URLS", "")
+if _extra:
+    for u in _extra.split(","):
+        u = u.strip()
+        if u and u not in _origins:
+            _origins.append(u)
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=[os.getenv("FRONTEND_URL", "http://localhost:3000"), "http://localhost:3000"],
+    allow_origins=_origins,
+    allow_origin_regex=r"https://.*\.railway\.app",
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
