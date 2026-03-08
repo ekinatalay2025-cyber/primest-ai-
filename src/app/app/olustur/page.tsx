@@ -190,7 +190,7 @@ export default function OlusturPage() {
         throw new Error("Sunucu yanıtı alınamadı. Video çok uzun sürdü olabilir - süreyi kısaltıp tekrar dene.");
       }
       if (!res.ok) throw new Error(data.detail || data.error || "Metin oluşturulamadı");
-      setNarration(data.narration);
+      setNarration(data.narration ?? "");
       setSources(data.sources || []);
 
       if (data.video_error) setError((prev) => (prev ? `${prev} | ` : "") + `Görüntü oluşmadı: ${data.video_error}`);
