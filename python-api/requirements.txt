@@ -1,0 +1,28 @@
+# PRIMEST AI - Python Backend (Tam Paket)
+# Python 3.11 veya 3.12 kullanın (3.14 henüz uyumlu değil)
+
+# Web API
+fastapi==0.115.6
+uvicorn[standard]==0.32.1
+python-multipart==0.0.17
+
+# AI & APIs
+openai==1.57.0
+httpx==0.28.1
+tavily-python==0.5.0
+fal-client>=0.4.0
+
+# Video - MoviePy (sinematik video üretimi)
+moviepy==1.0.3
+imageio-ffmpeg>=0.5.0
+Pillow==11.0.0
+numpy>=1.26.0,<2.0
+
+# Harita & Coğrafi
+folium==0.19.0
+
+# Veritabanı
+pymongo==4.10.1
+
+# Yardımcı
+python-dotenv==1.0.1

@@ -1,0 +1,46 @@
+========================================
+  FFmpeg Kurulumu - Windows
+  (Video üretimi için gerekli)
+========================================
+
+ADIM 1: İndir
+----------------------------------------
+1. Tarayıcıda aç: https://www.gyan.dev/ffmpeg/builds/
+
+2. "ffmpeg-release-essentials.zip" dosyasını indir
+   (Yaklaşık 70 MB)
+
+
+ADIM 2: Çıkart
+----------------------------------------
+1. İndirilen zip dosyasına sağ tık
+2. "Tümünü çıkart" veya "Extract All"
+3. Çıkartma yeri: C:\ffmpeg
+   (Klasör yoksa oluştur, oraya çıkart)
+4. Sonuç: C:\ffmpeg\bin klasörü olmalı
+   (içinde ffmpeg.exe, ffplay.exe, ffprobe.exe var)
+
+
+ADIM 3: PATH'e Ekle
+----------------------------------------
+1. Windows arama: "ortam değişkenleri" veya "environment variables" yaz
+2. "Sistem ortam değişkenlerini düzenle" aç
+3. "Ortam Değişkenleri" butonuna tıkla
+4. "Sistem değişkenleri" altında "Path" seç
+5. "Düzenle" tıkla
+6. "Yeni" tıkla
+7. Şunu yaz: C:\ffmpeg\bin
+8. Tamam, Tamam, Tamam
+
+
+ADIM 4: Kontrol
+----------------------------------------
+1. YENİ bir terminal/PowerShell aç (eskiyi kapatıp aç)
+2. Yaz: ffmpeg -version
+3. FFmpeg versiyon bilgisi görünüyorsa = BAŞARILI
+
+
+ADIM 5: Python API'yı Yeniden Başlat
+----------------------------------------
+BASLA.bat penceresini kapat, tekrar çift tıkla.
+Artık video üretimi çalışacak.

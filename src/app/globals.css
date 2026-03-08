@@ -1,0 +1,74 @@
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700&family=Outfit:wght@300;400;500;600&display=swap');
+@import "tailwindcss";
+
+:root {
+  --background: #050505;
+  --foreground: #e8e4df;
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: 'Outfit', sans-serif;
+}
+
+.font-display {
+  font-family: 'Cinzel', serif;
+}
+
+/* Scrollbar gizle */
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+
+/* Yazıda hover ışığı */
+.text-hover-glow {
+  transition: text-shadow 0.2s ease, color 0.2s ease;
+}
+.text-hover-glow:hover {
+  text-shadow: 0 0 12px rgba(201, 162, 39, 0.6);
+}
+
+/* Intro: sağdan sola kayan görseller */
+@keyframes introScroll {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+/* Intro: geometrik mozaik - hafif paralaks hareket */
+@keyframes introGeomScroll {
+  0%, 100% {
+    transform: translateX(0) translateY(0);
+  }
+  50% {
+    transform: translateX(-3%) translateY(-1%);
+  }
+}
+
+/* Intro: harita gibi sağdan sola akan grup (GPU hızlandırmalı) */
+@keyframes introScrollRightToLeft {
+  0% {
+    transform: translate3d(0, 0, 0);
+  }
+  100% {
+    transform: translate3d(-25%, 0, 0);
+  }
+}
+
+/* Intro: gradient mesh hafif nefes alma efekti */
+@keyframes introGradientShift {
+  0% {
+    opacity: 0.5;
+  }
+  100% {
+    opacity: 0.75;
+  }
+}
