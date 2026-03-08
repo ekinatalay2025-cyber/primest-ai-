@@ -157,11 +157,12 @@ def _get_media_paths(image_paths: Optional[list[str]] = None) -> list[Path]:
 
 
 def _create_gradient_clip(duration: float, w: int = 1920, h: int = 1080) -> "ColorClip":
-    """Rastgele gradient arka plan - medya yoksa kullan."""
+    """Rastgele gradient arka plan - medya yoksa kullan. Görünür ton (kapkara olmasın)."""
     from moviepy.editor import ColorClip
-    r = random.randint(3, 25)
-    g = random.randint(3, 25)
-    b = random.randint(3, 25)
+    # 60-120 arası: koyu ama görünür sinematik ton (önceden 3-25 = neredeyse siyah)
+    r = random.randint(55, 95)
+    g = random.randint(50, 90)
+    b = random.randint(55, 100)
     return ColorClip(size=(w, h), color=(r, g, b)).set_duration(duration)
 
 
