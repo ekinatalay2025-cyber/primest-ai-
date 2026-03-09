@@ -58,9 +58,17 @@ async def fetch_web_images(
         pexels_paths = await _fetch_pexels(search_query, api_key, out_dir, n - len(paths))
         paths.extend(pexels_paths)
 
-    # Pexels yoksa: topic bazlı rastgele picsum (en azından görsel olsun)
+    # Pexels boşsa: Unsplash dene (ücretsiz, 5K/saat)
     if len(paths) < 2:
-        fallback = _fetch_picsum_fallback(topic, out_dir, max(2, n - len(paths)))
+        unsplash_key = os.getenv("UNSPLASH_ACCESS_KEY", "").strip()
+        if unsplash_key:
+            search_query = await _build_search_query(topic, text, narration)
+            unsplash_paths = await _fetch_unsplash(search_query, unsplash_key, out_dir, max(2, n - len(paths)))
+            paths.extend(unsplash_paths)
+
+    # Son çare: Picsum (key gerekmez, async)
+    if len(paths) < 2:
+        fallback = await _fetch_picsum_fallback(topic, out_dir, max(2, n - len(paths)))
         paths.extend(fallback)
 
     return paths
@@ -134,19 +142,55 @@ async def _fetch_pexels(query: str, api_key: str, out_dir: Path, n: int) -> list
     return paths
 
 
-def _fetch_picsum_fallback(topic: str, out_dir: Path, n: int) -> list[str]:
-    """Pexels yoksa: topic hash'ine göre farklı picsum görselleri."""
-    import urllib.request
+async def _fetch_unsplash(query: str, access_key: str, out_dir: Path, n: int) -> list[str]:
+    """Unsplash API - Pexels boşsa fallback. Ücretsiz 5K/saat."""
+    import httpx
+    paths = []
+    try:
+        async with httpx.AsyncClient() as client:
+            resp = await client.get(
+                "https://api.unsplash.com/search/photos",
+                params={"query": query, "per_page": min(n, 8), "orientation": "landscape"},
+                headers={"Authorization": f"Client-ID {access_key}"},
+                timeout=15,
+            )
+            if resp.status_code != 200:
+                return []
+            data = resp.json()
+            results = data.get("results", [])[:n]
+            for i, p in enumerate(results):
+                urls = p.get("urls", {})
+                url = urls.get("regular") or urls.get("full") or urls.get("small")
+                if not url:
+                    continue
+                try:
+                    img_resp = await client.get(url, timeout=20)
+                    if img_resp.status_code == 200:
+                        path = out_dir / f"unsplash_{random.randint(10000, 99999)}_{i}.jpg"
+                        path.write_bytes(img_resp.content)
+                        paths.append(str(path))
+                except Exception:
+                    pass
+    except Exception:
+        pass
+    return paths
 
+
+async def _fetch_picsum_fallback(topic: str, out_dir: Path, n: int) -> list[str]:
+    """Son çare: Picsum - key gerekmez. Async (Railway uyumlu)."""
+    import httpx
     h = hash(topic) % 10000
     ids = [(h + i * 137) % 999 + 1 for i in range(min(n, 5))]
     paths = []
-    for i, id_ in enumerate(ids):
-        try:
-            url = f"https://picsum.photos/id/{id_}/1920/1080"
-            path = out_dir / f"picsum_{id_}_{random.randint(1000, 9999)}.jpg"
-            urllib.request.urlretrieve(url, str(path))
-            paths.append(str(path))
-        except Exception:
-            pass
+    async with httpx.AsyncClient() as client:
+        for i, id_ in enumerate(ids):
+            try:
+                url = f"https://picsum.photos/id/{id_}/1920/1080"
+                resp = await client.get(url, timeout=15)
+                if resp.status_code == 200:
+                    path = out_dir / f"picsum_{id_}_{random.randint(1000, 9999)}.jpg"
+                    path.write_bytes(resp.content)
+                    paths.append(str(path))
+            except Exception:
+                pass
     return paths
