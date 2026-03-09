@@ -179,7 +179,11 @@ async def apply_edits(
     try:
         subprocess.run(cmd, capture_output=True, check=True, timeout=300)
     except subprocess.CalledProcessError as e:
-        return {"ok": False, "error": f"İşleme hatası: {e.stderr.decode()[:200] if e.stderr else str(e)}"}
+        err = (e.stderr.decode(errors="replace") if e.stderr else str(e)) or str(e)
+        # FFmpeg sürüm bilgisini atla, gerçek hata genelde sonda
+        lines = [l for l in err.split("\n") if l.strip() and "ffmpeg version" not in l.lower() and "copyright" not in l.lower()]
+        err_msg = lines[-1] if lines else err[-300:] if len(err) > 300 else err
+        return {"ok": False, "error": f"İşleme hatası: {err_msg[:250]}"}
     except subprocess.TimeoutExpired:
         return {"ok": False, "error": "İşlem zaman aşımına uğradı"}
 
