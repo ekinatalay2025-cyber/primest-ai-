@@ -129,7 +129,7 @@ async def generate_video_content(req: GenerateRequest):
             raise HTTPException(status_code=500, detail="Anlatım oluşturulamadı (OpenAI boş döndü)")
 
         lang = (req.language or "tr").lower()[:2]
-        if lang and lang != "tr" and lang in ("en", "es", "ar"):
+        if lang and lang != "tr" and lang in ("en", "es", "ar", "de", "fr", "ru"):
             try:
                 from services.translation_service import translate_text
                 narration = await translate_text(narration, lang)

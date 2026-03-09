@@ -33,6 +33,9 @@ const DUB_LANGUAGES = [
   { id: "en", label: "İngilizce" },
   { id: "es", label: "İspanyolca" },
   { id: "ar", label: "Arapça" },
+  { id: "de", label: "Almanca" },
+  { id: "fr", label: "Fransızca" },
+  { id: "ru", label: "Rusça" },
 ];
 
 export default function AIStudioPage() {

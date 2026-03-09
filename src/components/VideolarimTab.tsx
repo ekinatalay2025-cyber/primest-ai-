@@ -293,7 +293,7 @@ export default function VideolarimTab() {
                 <h3 className="font-display text-lg font-semibold text-[#c9a227] mb-2">Videoyu Çevir</h3>
                 <p className="text-sm text-[#e8e4df]/70 mb-4">Hangi dilde dublajlı versiyon oluşturulsun?</p>
                 <div className="flex flex-wrap gap-2 mb-4">
-                  {[{ code: "en", label: "İngilizce" }, { code: "es", label: "İspanyolca" }, { code: "ar", label: "Arapça" }].map(({ code, label }) => (
+                  {[{ code: "en", label: "İngilizce" }, { code: "es", label: "İspanyolca" }, { code: "ar", label: "Arapça" }, { code: "de", label: "Almanca" }, { code: "fr", label: "Fransızca" }, { code: "ru", label: "Rusça" }].map(({ code, label }) => (
                     <button key={code} onClick={() => handleTranslate(code)} disabled={translating || !translateModal.narration} className="px-4 py-2 rounded-lg border border-[#c9a227]/40 text-[#c9a227] hover:bg-[#c9a227]/10 disabled:opacity-50">{translating ? "..." : label}</button>
                   ))}
                 </div>
@@ -303,7 +303,7 @@ export default function VideolarimTab() {
                       r.video_url ? (
                         <div key={lang} className="p-3 rounded-lg bg-[#141414] border border-[#c9a227]/20">
                           <div className="flex items-center justify-between gap-2 flex-wrap">
-                            <span className="text-[#c9a227] font-medium">{lang === "en" ? "İngilizce" : lang === "es" ? "İspanyolca" : "Arapça"}{(r as { duration_str?: string }).duration_str && <span className="text-[#e8e4df]/60 text-xs font-normal ml-2">Süre: {(r as { duration_str?: string }).duration_str}</span>}</span>
+                            <span className="text-[#c9a227] font-medium">{lang === "en" ? "İngilizce" : lang === "es" ? "İspanyolca" : lang === "ar" ? "Arapça" : lang === "de" ? "Almanca" : lang === "fr" ? "Fransızca" : lang === "ru" ? "Rusça" : lang}{(r as { duration_str?: string }).duration_str && <span className="text-[#e8e4df]/60 text-xs font-normal ml-2">Süre: {(r as { duration_str?: string }).duration_str}</span>}</span>
                             <a href={r.video_url} download target="_blank" rel="noopener noreferrer" className="px-3 py-1.5 rounded bg-[#c9a227]/30 text-[#c9a227] text-sm hover:bg-[#c9a227]/50">İndir</a>
                           </div>
                         </div>

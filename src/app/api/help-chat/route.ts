@@ -10,7 +10,7 @@ Bilgi verdiğin konular:
 - Reels/Shorts: Instagram Reels ve TikTok için 9:16 format. Videolarım'dan Shorts indir, Instagram/TikTok'a yükle
 - Embed: Videoyu web sitende göstermek için HTML kodu. Embed butonuna tıkla, kodu kopyala, sitene yapıştır
 - Remix: Videoya intro ekle, altyazı dili değiştir, kanal adı ekle
-- Çevir: Videoyu İngilizce, İspanyolca veya Arapça dublajlı versiyona çevir
+- Çevir: Videoyu İngilizce, İspanyolca, Arapça, Almanca, Fransızca veya Rusça dublajlı versiyona çevir
 - Videolarım: Oluşturduğun videolar, indir, paylaş, embed, çevir
 - Modlar: Tarih, bilim, felsefe, coğrafya, sanat, teknoloji - video türü seç
 

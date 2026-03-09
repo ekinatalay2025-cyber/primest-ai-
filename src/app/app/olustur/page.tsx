@@ -622,6 +622,9 @@ export default function OlusturPage() {
                           { code: "en", label: "İngilizce" },
                           { code: "es", label: "İspanyolca" },
                           { code: "ar", label: "Arapça" },
+                          { code: "de", label: "Almanca" },
+                          { code: "fr", label: "Fransızca" },
+                          { code: "ru", label: "Rusça" },
                         ].map(({ code, label }) => (
                           <button
                             key={code}
@@ -666,7 +669,7 @@ export default function OlusturPage() {
                               <div key={lang} className="p-3 rounded-lg bg-[#141414] border border-[#c9a227]/20">
                                 <div className="flex items-center justify-between gap-2 flex-wrap">
                                   <span className="text-[#c9a227] font-medium">
-                                    {lang === "en" ? "İngilizce" : lang === "es" ? "İspanyolca" : "Arapça"}
+                                    {lang === "en" ? "İngilizce" : lang === "es" ? "İspanyolca" : lang === "ar" ? "Arapça" : lang === "de" ? "Almanca" : lang === "fr" ? "Fransızca" : lang === "ru" ? "Rusça" : lang}
                                     {(r as { duration_str?: string }).duration_str && (
                                       <span className="text-[#e8e4df]/60 text-xs font-normal ml-2">
                                         Süre: {(r as { duration_str?: string }).duration_str}

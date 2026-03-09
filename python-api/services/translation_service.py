@@ -26,6 +26,9 @@ TARGET_LANGUAGES = {
     "en": {"name": "English", "grammar": "Use correct English grammar. Natural, idiomatic English. No literal translation."},
     "es": {"name": "Spanish", "grammar": "Use correct Spanish grammar (gramática española). Natural, native-level Spanish. Proper accents (á, é, í, ó, ú, ñ)."},
     "ar": {"name": "Arabic", "grammar": "Use correct Modern Standard Arabic grammar. Natural Arabic. Proper diacritics if needed."},
+    "de": {"name": "German", "grammar": "Use correct German grammar. Natural, idiomatic German. Proper umlauts (ä, ö, ü, ß)."},
+    "fr": {"name": "French", "grammar": "Use correct French grammar. Natural, native-level French. Proper accents (é, è, ê, ë, à, â, ç, etc.)."},
+    "ru": {"name": "Russian", "grammar": "Use correct Russian grammar. Natural, idiomatic Russian. Proper Cyrillic spelling."},
 }
 
 
