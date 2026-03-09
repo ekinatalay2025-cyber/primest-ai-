@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 
 export const dynamic = "force-dynamic";
-const PYTHON_API = process.env.PYTHON_API_URL || "http://localhost:8000";
+const PYTHON_API = process.env.PYTHON_API_URL || process.env.NEXT_PUBLIC_PYTHON_API_URL || "http://localhost:8000";
 
 // Video üretimi uzun sürer - timeout uzat
 export const maxDuration = 300;
@@ -31,7 +31,7 @@ export async function POST(req: NextRequest) {
       user_image_urls: user_image_urls ?? [],
     };
 
-    if (process.env.PYTHON_API_URL?.trim()) {
+    if (PYTHON_API?.trim()) {
       try {
         const controller = new AbortController();
         const timeout = setTimeout(() => controller.abort(), 10 * 60 * 1000); // 10 dakika
@@ -53,7 +53,8 @@ export async function POST(req: NextRequest) {
           throw new Error(`Python API geçersiz cevap: ${text.slice(0, 100)}`);
         }
         if (!res.ok) {
-          throw new Error((data.detail as string) || (data.error as string) || "Python API hatası");
+          const errMsg = (data.detail as string) || (data.error as string) || "Python API hatası";
+          return NextResponse.json({ error: errMsg, detail: errMsg }, { status: res.status });
         }
         return NextResponse.json({
           success: true,
