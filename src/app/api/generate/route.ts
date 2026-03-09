@@ -74,12 +74,18 @@ export async function POST(req: NextRequest) {
           video_error: data.video_error || null,
         });
       } catch (pyErr) {
-        console.warn("Python API failed, falling back to Node:", pyErr);
+        const msg = pyErr instanceof Error ? pyErr.message : String(pyErr);
+        console.warn("Python API failed, falling back to Node:", msg);
       }
     }
 
     const { default: nodeGenerate } = await import("./node-generate");
-    return nodeGenerate(req, payload);
+    const nodeRes = await nodeGenerate(req, payload);
+    const nodeData = await nodeRes.json();
+    if (nodeRes.ok && !nodeData.video_url) {
+      nodeData.video_error = "Video yok (Python API kullanılamadı - sadece metin)";
+    }
+    return NextResponse.json(nodeData, { status: nodeRes.status });
   } catch (err) {
     console.error("Generate error:", err);
     return NextResponse.json(
