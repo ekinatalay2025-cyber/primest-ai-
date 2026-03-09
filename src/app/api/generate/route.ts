@@ -53,7 +53,13 @@ export async function POST(req: NextRequest) {
           throw new Error(`Python API geçersiz cevap: ${text.slice(0, 100)}`);
         }
         if (!res.ok) {
-          const errMsg = (data.detail as string) || (data.error as string) || "Python API hatası";
+          let errMsg = "Python API hatası";
+          if (typeof data.detail === "string") errMsg = data.detail;
+          else if (Array.isArray(data.detail) && data.detail[0]?.msg) errMsg = data.detail[0].msg;
+          else if (typeof data.error === "string") errMsg = data.error;
+          else if (typeof data.message === "string") errMsg = data.message;
+          else if (text?.length < 300) errMsg = `Python API (${res.status}): ${text}`;
+          console.error("Python API error:", res.status, errMsg);
           return NextResponse.json({ error: errMsg, detail: errMsg }, { status: res.status });
         }
         return NextResponse.json({
