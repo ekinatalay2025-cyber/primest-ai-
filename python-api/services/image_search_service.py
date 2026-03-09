@@ -1,12 +1,12 @@
 """
-Ücretsiz mod: Konuyla alakalı görselleri internetten (Pexels) bulur.
+Ücretsiz mod: Konuyla alakalı görselleri Unsplash + Picsum'dan bulur.
 Premium: DALL-E kullanılır (ai_service).
 """
 import os
 import random
 from pathlib import Path
 
-# Konu → İngilizce arama terimi (Pexels için)
+# Konu → İngilizce arama terimi (Unsplash için)
 TOPIC_SEARCH_MAP = {
     "tarih": "history documentary ancient",
     "bilim": "science laboratory research",
@@ -26,11 +26,10 @@ async def fetch_web_images(
     user_image_urls: list[str] | None = None,
 ) -> list[str]:
     """
-    Pexels'tan konuyla alakalı görseller indir.
+    Unsplash + Picsum'dan konuyla alakalı görseller indir.
     Kullanıcı resim URL'leri varsa onları da ekle.
     Returns: İndirilen dosya yolları listesi.
     """
-    api_key = os.getenv("PEXELS_API_KEY", "").strip()
     out_dir = Path(__file__).parent.parent / "output" / "web_images"
     out_dir.mkdir(parents=True, exist_ok=True)
     paths: list[str] = []
@@ -52,21 +51,15 @@ async def fetch_web_images(
             except Exception:
                 pass
 
-    # Pexels'tan konuyla alakalı görseller (GPT ile konuya uygun İngilizce arama)
-    if api_key and len(paths) < n:
-        search_query = await _build_search_query(topic, text, narration)
-        pexels_paths = await _fetch_pexels(search_query, api_key, out_dir, n - len(paths))
-        paths.extend(pexels_paths)
-
-    # Pexels boşsa: Unsplash dene (ücretsiz, 5K/saat)
-    if len(paths) < 2:
+    # Unsplash (ana kaynak - Pexels kaldırıldı)
+    if len(paths) < n:
         unsplash_key = os.getenv("UNSPLASH_ACCESS_KEY", "").strip()
         if unsplash_key:
             search_query = await _build_search_query(topic, text, narration)
-            unsplash_paths = await _fetch_unsplash(search_query, unsplash_key, out_dir, max(2, n - len(paths)))
+            unsplash_paths = await _fetch_unsplash(search_query, unsplash_key, out_dir, n - len(paths))
             paths.extend(unsplash_paths)
 
-    # Son çare: Picsum (key gerekmez, async)
+    # Son çare: Picsum (key gerekmez)
     if len(paths) < 2:
         fallback = await _fetch_picsum_fallback(topic, out_dir, max(2, n - len(paths)))
         paths.extend(fallback)
@@ -75,7 +68,7 @@ async def fetch_web_images(
 
 
 async def _build_search_query(topic: str, text: str, narration: str) -> str:
-    """GPT ile konuya uygun İngilizce arama terimi (Pexels için)."""
+    """GPT ile konuya uygun İngilizce arama terimi (Unsplash için)."""
     import os
     api_key = os.getenv("OPENAI_API_KEY", "").strip()
     if api_key:
@@ -105,41 +98,6 @@ async def _build_search_query(topic: str, text: str, narration: str) -> str:
     extra = (text or narration or "")[:60].replace("ı", "i").replace("ğ", "g").replace("ü", "u").replace("ş", "s").replace("ö", "o").replace("ç", "c")
     words = extra.split()[:3]
     return f"{base} {' '.join(words)}" if words else base
-
-
-async def _fetch_pexels(query: str, api_key: str, out_dir: Path, n: int) -> list[str]:
-    """Pexels API ile görsel ara ve indir."""
-    import httpx
-
-    paths = []
-    try:
-        async with httpx.AsyncClient() as client:
-            resp = await client.get(
-                "https://api.pexels.com/v1/search",
-                params={"query": query, "per_page": min(n, 8), "orientation": "landscape"},
-                headers={"Authorization": api_key},
-                timeout=15,
-            )
-            if resp.status_code != 200:
-                return []
-            data = resp.json()
-            photos = data.get("photos", [])[:n]
-            for i, p in enumerate(photos):
-                src = p.get("src", {})
-                url = src.get("large2x") or src.get("large") or src.get("original")
-                if not url:
-                    continue
-                try:
-                    img_resp = await client.get(url, timeout=20)
-                    if img_resp.status_code == 200:
-                        path = out_dir / f"pexels_{random.randint(10000, 99999)}_{i}.jpg"
-                        path.write_bytes(img_resp.content)
-                        paths.append(str(path))
-                except Exception:
-                    pass
-    except Exception:
-        pass
-    return paths
 
 
 async def _fetch_unsplash(query: str, access_key: str, out_dir: Path, n: int) -> list[str]:
