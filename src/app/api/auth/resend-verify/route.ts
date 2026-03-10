@@ -36,15 +36,15 @@ export async function POST(req: NextRequest) {
         const { Resend } = await import("resend");
         const resend = new Resend(process.env.RESEND_API_KEY);
         await resend.emails.send({
-          from: process.env.RESEND_FROM || "PRIMEST AI <onboarding@resend.dev>",
+          from: process.env.RESEND_FROM || "CINEA <onboarding@resend.dev>",
           to: normalizedEmail,
-          subject: "PRIMEST AI - E-posta Doğrulama",
+          subject: "CINEA - E-posta Doğrulama",
           html: `
             <h2>E-posta Doğrulama</h2>
             <p>Hesabını doğrulamak için aşağıdaki linke tıkla:</p>
             <p><a href="${verifyUrl}" style="color:#c9a227">E-postamı Doğrula</a></p>
             <p>Bu link 24 saat geçerlidir.</p>
-            <p>— PRIMEST AI</p>
+            <p>— CINEA</p>
           `,
         });
       } catch (mailErr) {

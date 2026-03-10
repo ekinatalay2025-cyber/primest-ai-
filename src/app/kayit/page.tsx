@@ -46,7 +46,7 @@ export default function KayitPage() {
     <div className="min-h-screen flex items-center justify-center px-4 py-20 bg-[#050505]">
       <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="relative w-full max-w-md">
         <Link href="/" className="inline-block font-display text-[#c9a227] text-lg mb-8 hover:opacity-80">
-          ← PRIMEST AI
+          ← CINEA
         </Link>
         <div className="p-8 rounded-xl border border-[#c9a227]/20 bg-[#0d0d0d]/90">
           <h1 className="font-display text-2xl font-semibold text-[#e8e4df] mb-2">Kayıt Ol</h1>

@@ -67,7 +67,7 @@ export default function DogrulamaPage() {
     <div className="min-h-screen flex items-center justify-center px-4 py-20 bg-[#050505]">
       <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="relative w-full max-w-md">
         <Link href="/" className="inline-block font-display text-[#c9a227] text-lg mb-8 hover:opacity-80">
-          ← PRIMEST AI
+          ← CINEA
         </Link>
         <Suspense fallback={<div className="p-8 text-[#e8e4df]/60">Yükleniyor...</div>}>
           <DogrulamaForm />

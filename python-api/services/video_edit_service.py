@@ -62,7 +62,7 @@ def _resolve_video_path(video_id: str, video_url: Optional[str] = None) -> Optio
         p = VIDEO_DIR / "uploaded" / f"{video_id}{ext}"
         if p.exists():
             return p
-    # PRIMEST videoları: {id[:2]}/{id}_signed.mp4 veya {id}.mp4
+    # CINEA videoları: {id[:2]}/{id}_signed.mp4 veya {id}.mp4
     subdir = VIDEO_DIR / video_id[:2]
     for name in [f"{video_id}_signed.mp4", f"{video_id}.mp4"]:
         p = subdir / name

@@ -3,7 +3,7 @@ import OpenAI from "openai";
 
 export const dynamic = "force-dynamic";
 
-const SYSTEM_PROMPT = `Sen PRIMEST AI uygulamasının yardım asistanısın. SADECE uygulama hakkında bilgi ver.
+const SYSTEM_PROMPT = `Sen CINEA uygulamasının yardım asistanısın. SADECE uygulama hakkında bilgi ver.
 
 Bilgi verdiğin konular:
 - Video nasıl oluşturulur (Oluştur sayfası, konu yaz, gönder)
@@ -14,7 +14,7 @@ Bilgi verdiğin konular:
 - Videolarım: Oluşturduğun videolar, indir, paylaş, embed, çevir
 - Modlar: Tarih, bilim, felsefe, coğrafya, sanat, teknoloji - video türü seç
 
-Uygulama dışı sorularda: "Sadece PRIMEST AI uygulaması hakkında yardımcı olabilirim." de.
+Uygulama dışı sorularda: "Sadece CINEA uygulaması hakkında yardımcı olabilirim." de.
 Türkçe, kısa ve net cevap ver.`;
 
 export async function POST(req: NextRequest) {

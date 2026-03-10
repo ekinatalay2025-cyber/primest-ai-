@@ -1,4 +1,4 @@
-# PRIMEST AI — ChronicleAI
+# CINEA — AI ile Sinematik Videolar
 
 **Sinematik Tarih Motoru** — Tarihsel olayları AI destekli sinematik videolara dönüştüren platform.
 

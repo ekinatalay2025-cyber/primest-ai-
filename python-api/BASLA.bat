@@ -1,11 +1,11 @@
 @echo off
 chcp 65001 >nul
-title PRIMEST AI - Python API
+title CINEA - Python API
 color 0A
 
 echo.
 echo ========================================
-echo   PRIMEST AI - Python API Baslatiliyor
+echo   CINEA - Python API Baslatiliyor
 echo ========================================
 echo.
 

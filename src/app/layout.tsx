@@ -4,7 +4,7 @@ import { AuthProvider } from "@/context/AuthContext";
 import AppIntro from "@/components/AppIntro";
 
 export const metadata: Metadata = {
-  title: "PRIMEST AI | ChronicleAI - Sinematik Tarih Motoru",
+  title: "CINEA - AI ile Sinematik Videolar",
   description: "Tarihsel olayları sinematik videolara dönüştüren platform.",
 };
 

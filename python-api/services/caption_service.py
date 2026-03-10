@@ -47,7 +47,7 @@ def _create_ass_style_captions(
     primary, outline = colors.get(emotion, colors["neutral"])
 
     ass = f"""[Script Info]
-Title: PRIMEST Dynamic Captions
+Title: CINEA Dynamic Captions
 ScriptType: v4.00+
 
 [V4+ Styles]

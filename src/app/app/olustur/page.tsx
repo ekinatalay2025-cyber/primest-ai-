@@ -139,7 +139,9 @@ export default function OlusturPage() {
     const usedText = textArg ?? input.trim();
     if (!usedText) return;
     const txt = usedText.toLowerCase();
-    const isWhatIf = (txt.includes("ya ") || txt.includes("what if")) && (txt.includes("olsaydı") || txt.includes("ne olurdu") || txt.includes("farklı olsaydı"));
+    const isWhatIf =
+      (txt.includes("ya ") || txt.includes("what if") || txt.includes("yaşasa") || txt.includes("olsa")) &&
+      (txt.includes("olsaydı") || txt.includes("ne olurdu") || txt.includes("nasıl olur") || txt.includes("farklı olsaydı") || txt.includes("nasıl olurdu"));
     const detectedMode = modeArg ?? (isWhatIf ? "whatif" : "tarih");
     const usedTopic = topicArg ?? topic;
     const usedDuration = durationArg ?? durationMinutes + durationSeconds / 60;
@@ -174,7 +176,7 @@ export default function OlusturPage() {
           duration_minutes: Math.max(0.5, Math.min(10, usedDuration)),
           user_id: user?.email ?? "",
           channel_niche: channel?.niche ?? "",
-          channel_name: channel?.name ?? "PRIMEST AI",
+          channel_name: channel?.name ?? "CINEA",
           channel_logo_url: channel?.icon_url ?? "",
           outro_message: usedOutro || undefined,
           language: languageArg ?? "tr",
@@ -556,7 +558,7 @@ export default function OlusturPage() {
                 <div className="mt-2 flex gap-2 flex-wrap">
                   <a
                     href={videoUrl}
-                    download="primest-master.mp4"
+                    download="cinea-master.mp4"
                     className="inline-block px-4 py-2 rounded-lg bg-[#c9a227] text-[#050505] text-sm font-medium hover:opacity-90"
                   >
                     Master İndir
@@ -588,7 +590,7 @@ export default function OlusturPage() {
                 <div className="mt-2 flex gap-2 flex-wrap">
                   <a
                     href={shortsUrl}
-                    download="primest-shorts.mp4"
+                    download="cinea-shorts.mp4"
                     className="inline-block px-4 py-2 rounded-lg border border-[#c9a227]/40 text-[#c9a227] text-sm hover:bg-[#c9a227]/10"
                   >
                     Shorts İndir
@@ -764,7 +766,7 @@ export default function OlusturPage() {
                 <audio ref={audioRef} src={audioUrl} controls className="max-w-full" />
                 <a
                   href={audioUrl}
-                  download="primest-anlatici.mp3"
+                  download="cinea-anlatici.mp3"
                   className="px-4 py-2 rounded-lg border border-[#c9a227]/40 text-[#c9a227] text-sm hover:bg-[#c9a227]/10"
                 >
                   Sesi İndir

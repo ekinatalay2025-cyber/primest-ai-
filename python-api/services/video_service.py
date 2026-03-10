@@ -128,12 +128,12 @@ def _add_metadata_and_fingerprint(
     fp_encoded = base64.urlsafe_b64encode(f"{video_id}|{user_id}|{created_at}".encode()).decode()[:200]
     cmd = [
         _get_ffmpeg_cmd(), "-y", "-i", input_path,
-        "-metadata", f"title={(title or 'PRIMEST')[:200]}",
+        "-metadata", f"title={(title or 'CINEA')[:200]}",
         "-metadata", f"author_id={user_id}",
         "-metadata", f"creation_date={created_at}",
-        "-metadata", f"description=PRIMEST_FP:{fp_encoded}",
-        "-metadata", f"comment=PRIMEST_ID:{video_id}",
-        "-metadata", f"copyright=PRIMEST_OWNER:{user_id}",
+        "-metadata", f"description=CINEA_FP:{fp_encoded}",
+        "-metadata", f"comment=CINEA_ID:{video_id}",
+        "-metadata", f"copyright=CINEA_OWNER:{user_id}",
         "-metadata", f"video_hash={video_hash}",
         "-metadata", f"creation_time={created_at}",
         "-c", "copy",
@@ -236,7 +236,7 @@ def _add_outro(
         bye_txt = _pil_text_clip(msg, fontsize=min(18, 400 // max(1, len(msg))), color="#c9a227", duration=outro_duration)
         bye_txt = bye_txt.set_position(("center", video.h // 2 - 80))
         layers.append(bye_txt)
-        name_text = (channel_name or "PRIMEST AI")[:50]
+        name_text = (channel_name or "CINEA")[:50]
         name_txt = _pil_text_clip(name_text, fontsize=min(16, 300 // max(1, len(name_text))), color="#e8e4df", duration=outro_duration)
         name_txt = name_txt.set_position(("center", video.h // 2))
         layers.append(name_txt)
@@ -337,7 +337,7 @@ async def create_video(
 
     vid = video_id or str(uuid.uuid4())
     created_at = datetime.utcnow().strftime("%Y-%m-%dT%H:%M:%SZ")
-    video_title = (title or "PRIMEST Video")[:200]
+    video_title = (title or "CINEA Video")[:200]
 
     W, H, crf_val, ffmpeg_preset = _get_quality_params(quality)
 
@@ -429,7 +429,7 @@ async def create_video(
         video = CompositeVideoClip([bg]).set_duration(duration)
 
     # Kapanış: Son 6 sn - kullanıcı mesajı + kanal/logo (ses-video senkron için padding)
-    video = _add_outro(video, channel_name or "PRIMEST AI", channel_logo_url, OUTRO_DURATION, outro_message or "")
+    video = _add_outro(video, channel_name or "CINEA", channel_logo_url, OUTRO_DURATION, outro_message or "")
     try:
         from moviepy.editor import concatenate_audioclips
         silence = _create_silence_audio(OUTRO_DURATION)
@@ -543,7 +543,7 @@ def _create_shorts(
     except Exception:
         pass
 
-    shorts_video = _add_outro(shorts_video, channel_name or "PRIMEST AI", channel_logo_url, outro_duration=4, outro_message=outro_message)
+    shorts_video = _add_outro(shorts_video, channel_name or "CINEA", channel_logo_url, outro_duration=4, outro_message=outro_message)
 
     # Shorts ses-video senkron: outro için sessizlik padding
     try:
@@ -676,7 +676,7 @@ def add_platform_disclosure(video_id: str, platform: str) -> dict:
 def update_video_owner_metadata(video_id: str, new_owner_id: str) -> bool:
     """
     Satın alma sonrası video dosyası metadata'sını yeni sahibe güncelle.
-    PRIMEST_OWNER ve author_id güncellenir. creator_id metadata'da kalır.
+    CINEA_OWNER ve author_id güncellenir. creator_id metadata'da kalır.
     """
     subdir = OUTPUT_DIR / video_id[:2]
     candidates = [
@@ -691,7 +691,7 @@ def update_video_owner_metadata(video_id: str, new_owner_id: str) -> bool:
         out_path = str(path).replace(".mp4", "_updated.mp4")
         cmd = [
             "ffmpeg", "-y", "-i", str(path),
-            "-metadata", f"copyright=PRIMEST_OWNER:{new_owner_id}",
+            "-metadata", f"copyright=CINEA_OWNER:{new_owner_id}",
             "-metadata", f"author_id={new_owner_id}",
             "-c", "copy",
             out_path,
@@ -720,12 +720,14 @@ def verify_video_metadata(file_path: str) -> dict | None:
         description = tags.get("description", "")
         creation_time = tags.get("creation_time", "")
         video_hash = tags.get("video_hash", "")
-        video_id = comment.replace("PRIMEST_ID:", "").strip() if "PRIMEST_ID:" in comment else None
-        owner_id = copyright_val.replace("PRIMEST_OWNER:", "").strip() if "PRIMEST_OWNER:" in copyright_val else None
+        video_id = (comment.replace("CINEA_ID:", "").strip() if "CINEA_ID:" in comment else
+                    comment.replace("PRIMEST_ID:", "").strip() if "PRIMEST_ID:" in comment else None)
+        owner_id = (copyright_val.replace("CINEA_OWNER:", "").strip() if "CINEA_OWNER:" in copyright_val else
+                    copyright_val.replace("PRIMEST_OWNER:", "").strip() if "PRIMEST_OWNER:" in copyright_val else None)
         fp_raw = None
-        if "PRIMEST_FP:" in description:
+        if "CINEA_FP:" in description or "PRIMEST_FP:" in description:
             import base64
-            fp_encoded = description.replace("PRIMEST_FP:", "").strip()
+            fp_encoded = description.replace("CINEA_FP:", "").replace("PRIMEST_FP:", "").strip()
             try:
                 pad = 4 - len(fp_encoded) % 4
                 if pad != 4:
@@ -741,7 +743,7 @@ def verify_video_metadata(file_path: str) -> dict | None:
             "created_at": creation_time or (fp_raw.split("|")[2] if fp_raw and "|" in fp_raw else None),
             "fingerprint": fp_raw,
             "video_hash": video_hash,
-            "is_primest": True,
+            "is_cinea": True,
         }
     except Exception:
         return None

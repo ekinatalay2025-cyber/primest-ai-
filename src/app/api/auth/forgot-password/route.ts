@@ -39,15 +39,15 @@ export async function POST(req: NextRequest) {
         const { Resend } = await import("resend");
         const resend = new Resend(process.env.RESEND_API_KEY);
         await resend.emails.send({
-          from: process.env.RESEND_FROM || "PRIMEST AI <onboarding@resend.dev>",
+          from: process.env.RESEND_FROM || "CINEA <onboarding@resend.dev>",
           to: normalizedEmail,
-          subject: "PRIMEST AI - Şifre Sıfırlama",
+          subject: "CINEA - Şifre Sıfırlama",
           html: `
             <h2>Şifre Sıfırlama</h2>
             <p>Aşağıdaki linke tıklayarak şifreni sıfırlayabilirsin:</p>
             <p><a href="${resetUrl}" style="color:#c9a227">Şifremi Sıfırla</a></p>
             <p>Bu link 1 saat geçerlidir.</p>
-            <p>— PRIMEST AI</p>
+            <p>— CINEA</p>
           `,
         });
       } catch (mailErr) {

@@ -1,9 +1,8 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { motion } from "framer-motion";
 import { useAuth } from "@/context/AuthContext";
 
 type Video = {
@@ -87,49 +86,136 @@ export default function KesfetPage() {
   }
 
   return (
-    <main className="max-w-5xl mx-auto px-6 py-10">
-        <h1 className="font-display text-2xl font-semibold text-[#e8e4df] mb-6">Keşfet</h1>
+    <div className="fixed inset-0 z-50 bg-black flex flex-col">
+      {/* Üst bar */}
+      <div className="absolute top-0 left-0 right-0 z-20 flex items-center justify-between px-4 py-3 bg-gradient-to-b from-black/70 to-transparent">
+        <Link href="/app" className="p-2 -ml-2 rounded-full text-white hover:bg-white/10 transition-colors" aria-label="Geri">
+          <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+          </svg>
+        </Link>
+        <span className="font-display text-lg font-semibold text-white">Keşfet</span>
+        <div className="w-10" />
+      </div>
+
+      {/* Dikey kaydırma - kaydırdıkça tek tek gözüksün */}
+      <div
+        className="flex-1 min-h-0 overflow-y-auto snap-y snap-mandatory scrollbar-hide overscroll-none"
+        style={{ scrollBehavior: "smooth", WebkitOverflowScrolling: "touch" }}
+      >
         {videos.length === 0 ? (
-          <p className="text-[#e8e4df]/60">Henüz video yok. İlk videoyu sen oluştur!</p>
-        ) : (
-          <div className="grid gap-4 grid-cols-2 sm:grid-cols-3 md:grid-cols-4">
-            {videos.map((v) => (
-              <motion.div
-                key={v.videoId || v.title}
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                className="rounded-lg border border-[#c9a227]/20 bg-[#0d0d0d] overflow-hidden"
-              >
-                <div className="aspect-[9/16] max-h-48 bg-[#141414] flex items-center justify-center">
-                  <video src={v.shorts_url || v.videoUrl} controls className="w-full h-full object-contain" />
-                </div>
-                <div className="p-3">
-                  <h3 className="font-medium text-[#e8e4df] truncate text-sm mb-2">{v.title || "Video"}</h3>
-                  <div className="flex items-center gap-1.5 flex-wrap mb-2">
-                    <button onClick={() => handleLike(v.videoId!)} className="p-1.5 rounded border border-[#c9a227]/30 text-[#e8e4df]/70 hover:text-[#c9a227] hover:border-[#c9a227]/50" title="Beğen">👍</button>
-                    <button className="p-1.5 rounded border border-[#c9a227]/30 text-[#e8e4df]/70 hover:text-[#c9a227] hover:border-[#c9a227]/50" title="Şikayet et">⚠</button>
-                    <button onClick={() => setShowPriceId(showPriceId === v.videoId ? null : v.videoId || null)} className="p-1.5 rounded border border-[#c9a227]/30 text-[#e8e4df]/70 hover:text-[#c9a227] hover:border-[#c9a227]/50 relative" title="Fiyat">
-                      $
-                      {showPriceId === v.videoId && (
-                        <span className="absolute left-0 top-full mt-1 px-2 py-1 rounded bg-[#0d0d0d] border border-[#c9a227]/30 text-xs text-[#c9a227] whitespace-nowrap z-10">
-                          {v.for_sale ? `₺${(v.price || 0).toLocaleString("tr-TR")}` : "Satışta değil"}
-                        </span>
-                      )}
-                    </button>
-                    <button className="p-1.5 rounded border border-[#c9a227]/30 text-[#e8e4df]/70 hover:text-[#c9a227] hover:border-[#c9a227]/50" title="Öne çıkar">⭐</button>
-                  </div>
-                  <button
-                    onClick={() => handleKanalimaAt(v.videoId!)}
-                    disabled={!v.videoId || adding === v.videoId}
-                    className="w-full px-2 py-1.5 rounded border border-[#c9a227]/40 text-[#c9a227] text-xs hover:bg-[#c9a227]/10 disabled:opacity-50"
-                  >
-                    {adding === v.videoId ? "..." : "Kanalıma At"}
-                  </button>
-                </div>
-              </motion.div>
-            ))}
+          <div className="h-screen flex flex-col items-center justify-center px-6">
+            <p className="text-white/60 text-center">Henüz video yok. İlk videoyu sen oluştur!</p>
+            <Link href="/app/olustur" className="mt-4 px-6 py-2 rounded-lg border border-[#c9a227]/50 text-[#c9a227] hover:bg-[#c9a227]/10 transition-colors">
+              Video Oluştur
+            </Link>
           </div>
+        ) : (
+          videos.map((v) => (
+            <ReelItem
+              key={v.videoId || v.title}
+              video={v}
+              onLike={() => handleLike(v.videoId!)}
+              onKanalimaAt={() => handleKanalimaAt(v.videoId!)}
+              adding={adding === v.videoId}
+              showPrice={showPriceId === v.videoId}
+              onTogglePrice={() => setShowPriceId((p) => (p === v.videoId ? null : (v.videoId ?? null)))}
+            />
+          ))
         )}
-    </main>
+      </div>
+    </div>
+  );
+}
+
+function ReelItem({
+  video,
+  onLike,
+  onKanalimaAt,
+  adding,
+  showPrice,
+  onTogglePrice,
+}: {
+  video: Video;
+  onLike: () => void;
+  onKanalimaAt: () => void;
+  adding: boolean;
+  showPrice: boolean;
+  onTogglePrice: () => void;
+}) {
+  const videoRef = useRef<HTMLVideoElement>(null);
+  const itemRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const el = itemRef.current;
+    if (!el) return;
+    const io = new IntersectionObserver(
+      ([e]) => {
+        const v = videoRef.current;
+        if (v) {
+          if (e.isIntersecting) v.play().catch(() => {});
+          else v.pause();
+        }
+      },
+      { threshold: 0.5 }
+    );
+    io.observe(el);
+    return () => io.disconnect();
+  }, []);
+
+  return (
+    <div
+      ref={itemRef}
+      className="snap-start h-screen w-full flex flex-shrink-0 relative bg-black"
+      style={{ minHeight: "100vh" }}
+    >
+      {/* Video - tam ekran */}
+      <video
+        ref={videoRef}
+        src={video.shorts_url || video.videoUrl}
+        className="absolute inset-0 w-full h-full object-cover"
+        loop
+        muted
+        playsInline
+        preload="metadata"
+      />
+
+      {/* Alt - başlık */}
+      <div className="absolute bottom-0 left-0 right-0 p-4 pb-8 bg-gradient-to-t from-black/80 to-transparent">
+        <h3 className="font-medium text-white text-sm line-clamp-2 mb-3">{video.title || "Video"}</h3>
+        <button
+          onClick={onKanalimaAt}
+          disabled={!video.videoId || adding}
+          className="px-4 py-2 rounded-lg border border-[#c9a227]/50 text-[#c9a227] text-sm hover:bg-[#c9a227]/10 disabled:opacity-50 transition-colors"
+        >
+          {adding ? "..." : "Kanalıma At"}
+        </button>
+      </div>
+
+      {/* Sağ - video yanında butonlar */}
+      <div className="absolute right-3 top-1/2 -translate-y-1/2 flex flex-col items-center gap-6 z-10">
+        <button onClick={onLike} className="flex flex-col items-center gap-0.5 text-white drop-shadow-lg hover:text-[#c9a227] transition-colors" title="Beğen">
+          <span className="text-3xl">👍</span>
+          <span className="text-[10px] font-medium">{(video.likes ?? 0) > 0 ? (video.likes ?? 0).toLocaleString() : "Beğen"}</span>
+        </button>
+        <button className="flex flex-col items-center gap-0.5 text-white drop-shadow-lg hover:text-[#c9a227] transition-colors" title="Şikayet et">
+          <span className="text-3xl">⚠</span>
+          <span className="text-[10px] font-medium">Şikayet</span>
+        </button>
+        <button onClick={onTogglePrice} className="flex flex-col items-center gap-0.5 text-white drop-shadow-lg hover:text-[#c9a227] transition-colors relative" title="Satın al">
+          <span className="text-3xl">$</span>
+          <span className="text-[10px] font-medium">Satın al</span>
+          {showPrice && (
+            <span className="absolute -left-4 top-full mt-1 px-2 py-1 rounded bg-black/90 border border-[#c9a227]/50 text-xs text-[#c9a227] whitespace-nowrap z-20">
+              {video.for_sale ? `₺${(video.price || 0).toLocaleString("tr-TR")}` : "Satışta değil"}
+            </span>
+          )}
+        </button>
+        <button className="flex flex-col items-center gap-0.5 text-white drop-shadow-lg hover:text-[#c9a227] transition-colors" title="Öne çıkar">
+          <span className="text-3xl">⭐</span>
+          <span className="text-[10px] font-medium">Öne çıkar</span>
+        </button>
+      </div>
+    </div>
   );
 }

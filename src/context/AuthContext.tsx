@@ -17,7 +17,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const stored = localStorage.getItem("primest_user");
+    const stored = localStorage.getItem("cinea_user");
     if (stored) {
       try {
         setUser(JSON.parse(stored));
@@ -46,7 +46,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     if (!res.ok) throw new Error(data.error || "Giriş başarısız");
     const u = { email: data.user.email, name: data.user.name, emailVerified: data.user.emailVerified };
     setUser(u);
-    localStorage.setItem("primest_user", JSON.stringify(u));
+    localStorage.setItem("cinea_user", JSON.stringify(u));
     ensureChannel(data.user.email, data.user.name);
     return true;
   };
@@ -63,14 +63,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       ? { email: data.user.email, name: data.user.name, emailVerified: data.user.emailVerified ?? false }
       : { email, name, emailVerified: false };
     setUser(u);
-    localStorage.setItem("primest_user", JSON.stringify(u));
+    localStorage.setItem("cinea_user", JSON.stringify(u));
     ensureChannel(u.email, u.name);
     return true;
   };
 
   const logout = () => {
     setUser(null);
-    localStorage.removeItem("primest_user");
+    localStorage.removeItem("cinea_user");
   };
 
   return (

@@ -1,5 +1,5 @@
 """
-PRIMEST AI - Python Backend
+CINEA - Python Backend
 Sinematik Tarih Motoru - Güçlü işleme motoru
 """
 # PIL/Pillow 10+ uyumluluk - MoviePy ANTIALIAS kullanıyor, Pillow 10'da kaldırıldı
@@ -32,7 +32,7 @@ load_dotenv(root_env)
 load_dotenv()
 
 app = FastAPI(
-    title="PRIMEST AI API",
+    title="CINEA API",
     description="Sinematik Tarih Motoru - Video, harita, AI işleme",
     version="1.0.0",
 )
@@ -105,7 +105,7 @@ class GenerateResponse(BaseModel):
 # --- API Routes ---
 @app.get("/")
 def root():
-    return {"status": "ok", "service": "PRIMEST AI Python API"}
+    return {"status": "ok", "service": "CINEA Python API"}
 
 
 @app.get("/health")
@@ -153,7 +153,8 @@ async def generate_video_content(req: GenerateRequest):
             )
 
         async def get_pika():
-            return await generate_pika_video(narration, duration_sec=5) if premium else None
+            # FAL_KEY varsa her zaman AI video dene (premium şart değil)
+            return await generate_pika_video(narration, duration_sec=5)
 
         audio_path, info_fact, ai_images, pika_path = await asyncio.gather(
             generate_speech(narration, req.target_emotion or "neutral"),
@@ -180,8 +181,8 @@ async def generate_video_content(req: GenerateRequest):
                     narration, audio_path,
                     sources=sources if req.show_sources_in_video else [],
                     user_id=req.user_id or "",
-                    title=req.text[:200] if req.text else "PRIMEST Video",
-                    channel_name=req.channel_name or "PRIMEST AI",
+                    title=req.text[:200] if req.text else "CINEA Video",
+                    channel_name=req.channel_name or "CINEA",
                     channel_logo_url=req.channel_logo_url or "",
                     info_fact=info_fact,
                     quality=req.quality or "480p",
@@ -233,7 +234,7 @@ async def generate_video_content(req: GenerateRequest):
 
 @app.post("/api/verify-video")
 async def verify_video(file: UploadFile):
-    """Video yükle → ffprobe ile metadata tara → PRIMEST ID, sahip, tarih döndür."""
+    """Video yükle → ffprobe ile metadata tara → CINEA ID, sahip, tarih döndür."""
     if not file.filename or not file.filename.lower().endswith((".mp4", ".webm", ".mov")):
         raise HTTPException(status_code=400, detail="Geçerli video dosyası gerekli (mp4, webm, mov)")
     import tempfile
@@ -246,7 +247,7 @@ async def verify_video(file: UploadFile):
         result = verify_video_metadata(tmp_path)
         if result:
             return {"ok": True, **result}
-        return {"ok": False, "message": "PRIMEST imzası bulunamadı - bu video platformumuzda üretilmemiş."}
+        return {"ok": False, "message": "CINEA imzası bulunamadı - bu video platformumuzda üretilmemiş."}
     finally:
         try:
             os.remove(tmp_path)

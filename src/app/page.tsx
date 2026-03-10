@@ -6,7 +6,7 @@ export default function Home() {
       <header className="fixed top-0 left-0 right-0 z-50 bg-[#050505]/95 backdrop-blur-xl border-b border-[#c9a227]/10">
         <nav className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
           <Link href="/" className="font-display text-xl font-semibold tracking-wider text-[#c9a227]">
-            PRIMEST AI
+            CINEA
           </Link>
           <div className="flex items-center gap-6">
             <a href="/#ozellikler" className="text-sm font-medium text-[#e8e4df]/80 hover:text-[#c9a227]">
@@ -64,7 +64,7 @@ export default function Home() {
         </section>
 
         <footer className="py-8 border-t border-[#c9a227]/10 text-center text-sm text-[#e8e4df]/50">
-          PRIMEST AI — ChronicleAI © {new Date().getFullYear()}
+          CINEA © {new Date().getFullYear()}
         </footer>
       </main>
     </div>

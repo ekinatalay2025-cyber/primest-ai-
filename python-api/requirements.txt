@@ -1,4 +1,4 @@
-# PRIMEST AI - Python Backend (Tam Paket)
+# CINEA - Python Backend (Tam Paket)
 # Python 3.11 veya 3.12 kullanın (3.14 henüz uyumlu değil)
 
 # Web API

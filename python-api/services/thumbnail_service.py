@@ -67,7 +67,7 @@ async def generate_thumbnail_with_text(
     if font is None:
         font = ImageFont.load_default()
 
-    text = (title or "PRIMEST")[:60]
+    text = (title or "CINEA")[:60]
     bbox = draw.textbbox((0, 0), text, font=font)
     tw, th = bbox[2] - bbox[0], bbox[3] - bbox[1]
     x, y = (w - tw) // 2, h - th - 80
