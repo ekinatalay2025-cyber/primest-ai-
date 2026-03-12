@@ -141,13 +141,15 @@ async def generate_speech(text: str, emotion: str = "neutral", lang: str = "tr")
                 filepath.write_bytes(resp.content)
                 return str(filepath)
             err_text = resp.text or ""
-            # payment_required, quota_exceeded veya library voice hatası → OpenAI fallback
-            if any(x in err_text.lower() for x in ["payment_required", "paid_plan", "library", "quota_exceeded"]):
+            # ElevenLabs hata → OpenAI fallback (quota, invalid key, payment, vb.)
+            fallback_triggers = ["payment_required", "paid_plan", "library", "quota_exceeded", "invalid_api_key"]
+            if any(x in err_text.lower() for x in fallback_triggers):
                 return await _openai_tts(text)
             raise Exception(f"ElevenLabs error: {err_text}")
         except Exception as e:
             err_str = str(e)
-            if any(x in err_str.lower() for x in ["payment_required", "paid_plan", "library", "quota_exceeded"]):
+            fallback_triggers = ["payment_required", "paid_plan", "library", "quota_exceeded", "invalid_api_key"]
+            if any(x in err_str.lower() for x in fallback_triggers):
                 return await _openai_tts(text)
             raise
 
